@@ -32,17 +32,9 @@ return [
     'connections' => [
 
         'mongodb' => [
-            'driver'   => 'mongodb',
-            'host'     => env('DB_HOST'),
-            'port'     => env('DB_PORT'),
+            'driver'   => env('DB_CONNECTION'),
+            'dsn'      => env('DB_URI'),
             'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
-            'options'  => [
-                'authSource' => env('DB_AUTHENTICATION_DATABASE', 'admin'),
-                'retryWrites' => true,
-                'tls' => true,
-            ]
         ],
 
         'sqlite' => [
