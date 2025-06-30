@@ -13,7 +13,7 @@ class FirebaseService
     {
         $factory = (new Factory)
             ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')))
-            ->withDatabaseUri(base_path(env('FIREBASE_URI')));
+            ->withDatabaseUri(env('FIREBASE_DB_URI'));
 
         $this->database = $factory->createDatabase();
     }
