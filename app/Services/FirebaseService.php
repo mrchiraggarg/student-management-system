@@ -2,48 +2,21 @@
 
 namespace App\Services;
 
-use Google\Cloud\Firestore\FirestoreClient;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Database;
 
 class FirebaseService
 {
-    protected $firestore;
+    protected $database;
 
     public function __construct()
     {
-        // Initialize Firestore with credentials
-        $this->firestore = new FirestoreClient([
-            'projectId'   => config('services.firebase.project_id'),
-            'keyFilePath' => base_path(config('services.firebase.credentials')),
-        ]);
+        $factory = (new Factory)->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')));
+        $this->database = $factory->createDatabase();
     }
 
-    // Fetch all students
-    public function getAllStudents()
+    public function getDatabase(): Database
     {
-        return $this->firestore->collection('students')->documents();
-    }
-
-    // Add a new student
-    public function addStudent(array $data)
-    {
-        return $this->firestore->collection('students')->add($data);
-    }
-
-    // Get a single student by ID
-    public function getStudent($id)
-    {
-        return $this->firestore->collection('students')->document($id)->snapshot();
-    }
-
-    // Update a student
-    public function updateStudent($id, array $data)
-    {
-        return $this->firestore->collection('students')->document($id)->set($data, ['merge' => true]);
-    }
-
-    // Delete a student
-    public function deleteStudent($id)
-    {
-        return $this->firestore->collection('students')->document($id)->delete();
+        return $this->database;
     }
 }
