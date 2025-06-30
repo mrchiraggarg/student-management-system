@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 
-class Student extends Model
+class Student extends Eloquent
 {
     protected $connection = 'mongodb';
     protected $collection = 'students';
