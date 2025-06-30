@@ -23,7 +23,9 @@ return [
         'database' => env('DB_DATABASE'),
         'username' => env('DB_USERNAME'),
         'password' => env('DB_PASSWORD'),
-        'options'  => []
+        'options'  => [
+            'database' => env('DB_AUTHENTICATION_DATABASE', 'admin') // required with MongoDB >= 3.0
+        ]
     ],
 
     'default' => env('DB_CONNECTION', 'sqlite'),
