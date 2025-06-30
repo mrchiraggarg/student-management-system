@@ -12,8 +12,8 @@ class FirebaseService
     public function __construct()
     {
         $factory = (new Factory)
-            ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')))
-            ->withDatabaseUri(env('FIREBASE_DB_URI'));
+            ->withServiceAccount(base_path(env('FIREBASE_CREDENTIALS')));
+            // ->withDatabaseUri(env('FIREBASE_DB_URI'));
 
         $this->database = $factory->createDatabase();
     }
