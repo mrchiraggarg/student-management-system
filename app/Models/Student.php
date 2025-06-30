@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
+use Jenssegers\Mongodb\Eloquent\Model; 
 
 class Student extends Model
 {
-    protected $connection = 'mongodb'; // Use MongoDB connection
-    protected $collection = 'students'; // Optional: Specify collection name
+    protected $connection = 'mongodb'; // ✅ Force MongoDB
+    protected $collection = 'students';
     protected $fillable = ['name', 'email', 'course'];
 }
