@@ -7,57 +7,42 @@ use App\Services\FirebaseService;
 
 class StudentController extends Controller
 {
-    protected $firebase;
+    protected $database;
 
     public function __construct(FirebaseService $firebase)
     {
-        $this->firebase = $firebase;
+        $this->database = $firebase->getDatabase();
     }
 
-    public function index()
-    {
-        $students = $this->firebase->getAllStudents();
-        $data = [];
-
-        foreach ($students as $student) {
-            $data[] = array_merge(['id' => $student->id()], $student->data());
-        }
-
-        return response()->json($data);
-    }
-
+    // CREATE student
     public function store(Request $request)
     {
-        $request->validate([
-            'name'  => 'required',
-            'email' => 'required|email',
-            'course'=> 'required',
-        ]);
+        $postData = $request->only(['name', 'email', 'course']);
+        $newStudent = $this->database->getReference('students')->push($postData);
 
-        $student = $this->firebase->addStudent($request->only('name', 'email', 'course'));
-        return response()->json(['id' => $student->id()]);
+        return response()->json(['message' => 'Student created', 'id' => $newStudent->getKey()]);
     }
 
-    public function show($id)
+    // READ students
+    public function index()
     {
-        $student = $this->firebase->getStudent($id);
-
-        if (!$student->exists()) {
-            return response()->json(['error' => 'Not Found'], 404);
-        }
-
-        return response()->json($student->data());
+        $students = $this->database->getReference('students')->getValue();
+        return response()->json($students);
     }
 
+    // UPDATE student
     public function update(Request $request, $id)
     {
-        $this->firebase->updateStudent($id, $request->only('name', 'email', 'course'));
+        $data = $request->only(['name', 'email', 'course']);
+        $this->database->getReference("students/{$id}")->update($data);
+
         return response()->json(['message' => 'Student updated']);
     }
 
+    // DELETE student
     public function destroy($id)
     {
-        $this->firebase->deleteStudent($id);
+        $this->database->getReference("students/{$id}")->remove();
         return response()->json(['message' => 'Student deleted']);
     }
 }
