@@ -14,6 +14,12 @@ class StudentController extends Controller
         $this->database = $firebase->getDatabase();
     }
 
+    // Show create form
+    public function create()
+    {
+        return view('students.create');
+    }
+
     // CREATE student
     public function store(Request $request)
     {
@@ -26,8 +32,17 @@ class StudentController extends Controller
     // READ students
     public function index()
     {
-        $students = $this->database->getReference('students')->getValue();
-        return response()->json($students);
+        $students = $this->database->getReference('students')->getValue() ?? [];
+        // return response()->json($students);
+
+        return view('students.index', compact('students'));
+    }
+
+    // Show edit form
+    public function edit($id)
+    {
+        $student = $this->database->getReference("students/{$id}")->getValue();
+        return view('students.edit', compact('student', 'id'));
     }
 
     // UPDATE student
