@@ -1,6 +1,11 @@
 <?php
 
-// use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentController;
+
+Route::resource('students', StudentController::class);
+
+
 // use App\Http\Controllers\StudentController;
 
 // Route::get('/students', [StudentController::class, 'index']);
