@@ -1,13 +1,13 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('content')
-<h2>Add Student</h2>
-<form action="{{ route('students.store') }}" method="POST">
-    @csrf
-    <label>Name: <input type="text" name="name" required></label><br>
-    <label>Email: <input type="email" name="email" required></label><br>
-    <label>Course: <input type="text" name="course" required></label><br>
-    <button type="submit">Add</button>
-</form>
-<a href="{{ route('students.index') }}">Back</a>
+<div class="container mt-4">
+    <h2>Add Student</h2>
+    <form method="POST" action="{{ route('students.store') }}">
+        @csrf
+        @include('student.partials.form', ['student' => new \App\Models\Student])
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{{ route('students.index') }}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
 @endsection
