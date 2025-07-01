@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use App\Services\FirebaseService;
 
 class StudentController extends Controller
 {
     protected $database;
     protected $table = 'students';
 
-    public function __construct()
+    public function __construct(FirebaseService $firebase)
     {
-        $this->database = App::make('firebase.database');
+        // $this->database = App::make('firebase.database');
+        $this->database = $firebase->getDatabase();
     }
 
     public function index()
