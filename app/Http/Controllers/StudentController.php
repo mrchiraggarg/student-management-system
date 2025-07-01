@@ -3,61 +3,52 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Services\FirebaseService;
+use Illuminate\Support\Facades\App;
 
 class StudentController extends Controller
 {
     protected $database;
+    protected $table = 'students';
 
-    public function __construct(FirebaseService $firebase)
+    public function __construct()
     {
-        $this->database = $firebase->getDatabase();
+        $this->database = App::make('firebase.database');
     }
 
-    // Show create form
-    public function create()
-    {
-        return view('students.create');
-    }
-
-    // CREATE student
-    public function store(Request $request)
-    {
-        $postData = $request->only(['name', 'email', 'course']);
-        $newStudent = $this->database->getReference('students')->push($postData);
-
-        return response()->json(['message' => 'Student created', 'id' => $newStudent->getKey()]);
-    }
-
-    // READ students
     public function index()
     {
-        $students = $this->database->getReference('students')->getValue() ?? [];
-        // return response()->json($students);
-
-        return view('students.index', compact('students'));
+        $students = $this->database->getReference($this->table)->getValue();
+        return view('student.index', compact('students'));
     }
 
-    // Show edit form
+    public function create()
+    {
+        return view('student.create');
+    }
+
+    public function store(Request $request)
+    {
+        $postData = $request->only(['name', 'email', 'phone', 'course']);
+        $this->database->getReference($this->table)->push($postData);
+        return redirect()->route('students.index');
+    }
+
     public function edit($id)
     {
-        $student = $this->database->getReference("students/{$id}")->getValue();
-        return view('students.edit', compact('student', 'id'));
+        $student = $this->database->getReference("$this->table/$id")->getValue();
+        return view('student.edit', compact('student', 'id'));
     }
 
-    // UPDATE student
     public function update(Request $request, $id)
     {
-        $data = $request->only(['name', 'email', 'course']);
-        $this->database->getReference("students/{$id}")->update($data);
-
-        return response()->json(['message' => 'Student updated']);
+        $postData = $request->only(['name', 'email', 'phone', 'course']);
+        $this->database->getReference("$this->table/$id")->update($postData);
+        return redirect()->route('students.index');
     }
 
-    // DELETE student
     public function destroy($id)
     {
-        $this->database->getReference("students/{$id}")->remove();
-        return response()->json(['message' => 'Student deleted']);
+        $this->database->getReference("$this->table/$id")->remove();
+        return redirect()->route('students.index');
     }
 }
